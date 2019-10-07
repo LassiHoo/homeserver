@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Plotgraph from './components/plotgraph'
 import MQTTtest from './components/MQttclient'
 
 
@@ -15,10 +14,10 @@ const testdata = [
 ];
 
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">
-        <Plotgraph temperature={testdata} />
         <MQTTtest/>
       </header>
     </div>

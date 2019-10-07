@@ -1,39 +1,56 @@
 import React, {Component} from 'react';
 import { connect } from 'mqtt';
+import Plotgraph from './plotgraph'
 
 var mqtt = require('mqtt')
 var client
+
+const testdata = [
+  ["time", "Temperature"],
+  [1, 12],
+  [2, 33],
+  [3, 3],
+  [4, 20],
+  [5, 18],
+  [6, 14]
+];
 class MQTTtest extends Component{
 
 
   constructor() {
 
     super();
-
+    this.state = {
+    chartData:null
+    }
+   this.processMessage = this.processMessage.bind(this);
     client  = new mqtt.connect("mqtt:127.0.0.1:9001")
 
     client.on('connect', function () {
       client.subscribe('Heppuhei', function (err) {
-        if (!err) {
-          client.publish('Heppuhei', 'Dodidodidodo')
+        if (err) {
+          console.log("Failed to subscribe");
         }
       })
     })
   }
 
+  processMessage(topic,message,packet){
+
+    var str = String.fromCharCode.apply(null,message);
+    var object = JSON.parse(str);
+    const add = [];
+    add[0] = object["time"]
+    add[1] = object["temp"]
+    const hepdata = testdata;
+    testdata.push(add);
+    this.setState({chartData: testdata});
+    console.log("state content");
+    console.log(this.state.chartData);
+  }
+
   componentDidMount(){
-
-
-    client.on('message', function (topic, message) {
-    // message is Buffer
-      console.log(message.toString())
-
-    })
-
-      client.on('packetreceive',function(packet){
-        console.log("receiving packet");
-        console.log(packet);
-      });
+      client.on('message',this.processMessage);
 
     // client.addEventListener('packetreceive',function(packet){
     //   console.log('receiving packet')
@@ -41,8 +58,10 @@ class MQTTtest extends Component{
     //     })
   }
   render(){
+    console.log("state content in render");
+    console.log(this.state.chartData);
     return(
-      <div>hep </div>
+      <Plotgraph temperature={this.state.chartData}/>
     );
   }
 }

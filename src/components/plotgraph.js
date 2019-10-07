@@ -1,27 +1,31 @@
 import React, {Component} from 'react';
 import Chart from 'react-google-charts';
 
+
 class Plotgraph extends Component{
 
   constructor(props) {
+    console.log("contructing plotgraph")
     super(props);
     this.state = {
-     chartData:null
+     chartData: this.props.temperature
    }
   }
 
   setDataToState(){
-    
-    this.setState({chartData: this.props.temperature});
+      this.setState({chartData: this.props.temperature});
 }
 
 componentDidMount(){
-console.log("component mount");
-this.setDataToState();
+  console.log("plotgraph component mount");
+  console.log(this.props.temperature)
+  this.setDataToState();
 }
 
 
   render() {
+    console.log("plotgraph render")
+    console.log(this.props.temperature)
     return (
       <div>
       <Chart
@@ -29,7 +33,7 @@ this.setDataToState();
     height={'300px'}
     chartType="AreaChart"
     loader={<div>Loading Chart</div>}
-    data={this.state.chartData}
+    data={this.props.temperature}
     options={{
       title: 'hep',
       hAxis: { title: 'Year', titleTextStyle: { color: '#333' } },
@@ -43,5 +47,4 @@ this.setDataToState();
     );
   }
 }
-
 export default Plotgraph;
