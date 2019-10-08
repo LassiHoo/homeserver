@@ -42,9 +42,6 @@ class MQTTtest extends Component{
 
   processMessage (topic,message,packet){
 
-    console.log("topic: ");
-    console.log(topic);
-    console.log(SENSOR_NAME);
     var subscribe_channel = ""
     if (topic == SENSOR_NAME)
     {
@@ -57,10 +54,16 @@ class MQTTtest extends Component{
       {
         // sensor is not included in MQTT network, add device to
         // sensorNameList and sbuscibe the subscribe_channel
-        testdata.push({name:subscribe_channel,data: []});
+  
+        testdata.push({name:subscribe_channel,data: [["time", "Temperature"]]});
+
         client.subscribe(subscribe_channel, function (err) {
           if (err) {
-            console.log("Failed to subscribe device");
+            console.log("Failed to subscribe device:");
+            console.log(subscribe_channel)
+          }
+          else{
+            console.log("device, subscribe:");
             console.log(subscribe_channel)
           }
         })
@@ -88,14 +91,26 @@ class MQTTtest extends Component{
 
   }
 
+  renderGraphs(i){
+    const graph = this.state.chartData[i].data
+    return(
+      <Plotgraph temperature={graph}/>
+    );
+
+  }
+
   componentDidMount(){
       client.on('message',this.processMessage);
   }
   render(){
+    const allGraphs = [];
+    for (let index = 0; index < this.state.chartData.length; index++) {
+        allGraphs.push(this.renderGraphs(index));
+  
+    }
     {/*<Plotgraph temperature={this.state.chartData}/>*/} 
     return(
-      
-      <div>{console.log("perse")}</div>
+      <div>{allGraphs}</div>
     );
   }
 }
