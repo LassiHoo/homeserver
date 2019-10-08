@@ -94,7 +94,10 @@ class MQTTtest extends Component{
   renderGraphs(i){
     const graph = this.state.chartData[i].data
     return(
-      <Plotgraph temperature={graph}/>
+      <div className="PlotGraph"> 
+        <Plotgraph temperature={graph}/>
+      </div>
+      
     );
 
   }

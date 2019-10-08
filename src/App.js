@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import MQTTtest from './components/MQttclient'
-
+import './index.css';
 
 const testdata = [
   ["time", "Temperature"],
