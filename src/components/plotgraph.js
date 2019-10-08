@@ -29,14 +29,14 @@ componentDidMount(){
     return (
       <div>
       <Chart
-    width={300}
+    width={500}
     height={'300px'}
     chartType="AreaChart"
     loader={<div>Loading Chart</div>}
     data={this.props.temperature}
     options={{
-      title: 'hep',
-      hAxis: { title: 'Year', titleTextStyle: { color: '#333' } },
+      title: this.props.name,
+      hAxis: { title: 'sensor data', titleTextStyle: { color: '#333' } },
       vAxis: { minValue: 0 },
       // For the legend to fit, we make the chart area smaller
       chartArea: { width: '50%', height: '70%' },
