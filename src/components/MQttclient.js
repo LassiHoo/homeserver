@@ -5,7 +5,7 @@ import Plotgraph from './plotgraph'
 var mqtt = require('mqtt')
 var client
 
-const testdata = [
+const testdata =[{ name: "initial", data:[
   ["time", "Temperature"],
   [1, 12],
   [2, 33],
@@ -13,7 +13,11 @@ const testdata = [
   [4, 20],
   [5, 18],
   [6, 14]
-];
+]}];
+const SENSOR_NAME = 'sensors/name';
+const SENSOR_DATA_LIN = 'sensors/data/linear';
+const SENSOR_DATA_LOG = 'sensors/data/log';
+const sensorNameList = [];
 class MQTTtest extends Component{
 
 
@@ -21,13 +25,13 @@ class MQTTtest extends Component{
 
     super();
     this.state = {
-    chartData:null
+    chartData:testdata
     }
    this.processMessage = this.processMessage.bind(this);
     client  = new mqtt.connect("mqtt:127.0.0.1:9001")
 
     client.on('connect', function () {
-      client.subscribe('Heppuhei', function (err) {
+      client.subscribe(SENSOR_NAME, function (err) {
         if (err) {
           console.log("Failed to subscribe");
         }
@@ -35,33 +39,63 @@ class MQTTtest extends Component{
     })
   }
 
-  processMessage(topic,message,packet){
 
-    var str = String.fromCharCode.apply(null,message);
-    var object = JSON.parse(str);
-    const add = [];
-    add[0] = object["time"]
-    add[1] = object["temp"]
-    const hepdata = testdata;
-    testdata.push(add);
-    this.setState({chartData: testdata});
-    console.log("state content");
-    console.log(this.state.chartData);
+  processMessage (topic,message,packet){
+
+    console.log("topic: ");
+    console.log(topic);
+    console.log(SENSOR_NAME);
+    var subscribe_channel = ""
+    if (topic == SENSOR_NAME)
+    {
+      subscribe_channel = SENSOR_NAME + "/" + message;
+
+      let sensor = testdata.find(v=>
+        v.name === subscribe_channel
+      );
+      if (!sensor)
+      {
+        // sensor is not included in MQTT network, add device to
+        // sensorNameList and sbuscibe the subscribe_channel
+        testdata.push({name:subscribe_channel,data: []});
+        client.subscribe(subscribe_channel, function (err) {
+          if (err) {
+            console.log("Failed to subscribe device");
+            console.log(subscribe_channel)
+          }
+        })
+      }
+    }
+    else
+    {
+       console.log(sensorNameList);
+       for (var i = 0; i < testdata.length; i++) {
+         if ( testdata[i].name === topic )
+         {
+           var str = String.fromCharCode.apply(null,message);
+           var object = JSON.parse(str);
+           const add = [];
+           add[0] = object["time"]
+           add[1] = object["temp"]
+           testdata[i].data.push(add);
+           console.log("data added, testdata content");
+           console.log(testdata);
+           this.setState({chartData: testdata});
+           break;
+         }
+       }
+    }
+
   }
 
   componentDidMount(){
       client.on('message',this.processMessage);
-
-    // client.addEventListener('packetreceive',function(packet){
-    //   console.log('receiving packet')
-    //   console.log(packet);
-    //     })
   }
   render(){
-    console.log("state content in render");
-    console.log(this.state.chartData);
+    {/*<Plotgraph temperature={this.state.chartData}/>*/} 
     return(
-      <Plotgraph temperature={this.state.chartData}/>
+      
+      <div>{console.log("perse")}</div>
     );
   }
 }
