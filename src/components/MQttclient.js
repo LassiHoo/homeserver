@@ -82,15 +82,16 @@ class MQTTtest extends Component{
        for (var i = 0; i < testdata.length; i++) {
          if ( testdata[i].name === topic )
          {
+           testdata[i].data=[];
            var str = String.fromCharCode.apply(null,message);
            console.log(str);
            var object = JSON.parse(str);
-           const add={time:object["time"],value:object["temp"]};
-           console.log("Add object");
-           console.log(add);
-           console.log("testdata data:");
-           console.log(testdata.data);
-           testdata[i].data.push(add);
+           for (var u = 0; u < object["time"].length; u++) {
+             const add = {time:object["time"][u],value:object["temp"][u]};
+             console.log("Add json value");
+             console.log(add);
+             testdata[i].data.push(add);
+           }
            console.log("data added, testdata content");
            console.log(testdata);
            this.setState({chartData: testdata});
