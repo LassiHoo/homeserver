@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Chart from 'react-google-charts';
+import {LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip} from "recharts";
 
 
 class Plotgraph extends Component{
@@ -28,21 +29,14 @@ componentDidMount(){
     console.log(this.props.temperature)
     return (
       <div>
-      <Chart
-    width={500}
-    height={'300px'}
-    chartType="AreaChart"
-    loader={<div>Loading Chart</div>}
-    data={this.props.temperature}
-    options={{
-      title: this.props.name,
-      hAxis: { title: 'sensor data', titleTextStyle: { color: '#333' } },
-      vAxis: { minValue: 0 },
-      // For the legend to fit, we make the chart area smaller
-      chartArea: { width: '50%', height: '70%' },
-      // lineWidth: 25
-    }}
-  />
+      <LineChart width={500} height={300} data={this.props.temperature}
+      key={Math.random()}>
+    <XAxis dataKey="time" tick={{fontSize: 15}}/>
+    <YAxis tick={{fontSize: 15}} />
+    <Tooltip/>
+    <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
+    <Line type="monotone" dataKey="value" stroke="#82ca9d" />
+  </LineChart>
   </div>
     );
   }

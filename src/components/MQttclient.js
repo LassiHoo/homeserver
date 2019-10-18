@@ -5,14 +5,13 @@ import Plotgraph from './plotgraph'
 var mqtt = require('mqtt')
 var client
 
-const testdata =[{ name: "initial", data:[
-  ["time", "Temperature"],
-  [1, 12],
-  [2, 33],
-  [3, 3],
-  [4, 20],
-  [5, 18],
-  [6, 14]
+const testdata =[{ name: "Sauna", data:[
+  //["time", "Temperature"],
+  {time:"02:03:19", value: 12},
+  {time:"02:04:19", value: 1},
+  {time:"02:05:19", value: 120},
+  {time:"02:06:19", value: 192},
+  {time:"02:07:19", value: 19},
 ]}];
 const SENSOR_NAME = 'sensors/name';
 const SENSOR_DATA_LIN = 'sensors/data/linear';
@@ -43,6 +42,8 @@ class MQTTtest extends Component{
   processMessage (topic,message,packet){
 
     var subscribe_channel = ""
+    console.log("topic:")
+    console.log(topic)
     if (topic == SENSOR_NAME)
     {
       subscribe_channel = SENSOR_NAME + "/" + message;
@@ -54,8 +55,8 @@ class MQTTtest extends Component{
       {
         // sensor is not included in MQTT network, add device to
         // sensorNameList and sbuscibe the subscribe_channel
-  
-        testdata.push({name:subscribe_channel,data: [["time", "Temperature"]]});
+
+        testdata.push({name:subscribe_channel,data:[]});
 
         client.subscribe(subscribe_channel, function (err) {
           if (err) {
@@ -71,15 +72,24 @@ class MQTTtest extends Component{
     }
     else
     {
-       console.log(sensorNameList);
+      console.log("data, sensornamelist:");
+      console.log(sensorNameList);
+      console.log("testdata");
+      console.log(testdata);
+      console.log(testdata.length);
+      console.log("message");
+      console.log(message);
        for (var i = 0; i < testdata.length; i++) {
          if ( testdata[i].name === topic )
          {
            var str = String.fromCharCode.apply(null,message);
+           console.log(str);
            var object = JSON.parse(str);
-           const add = [];
-           add[0] = object["time"]
-           add[1] = object["temp"]
+           const add={time:object["time"],value:object["temp"]};
+           console.log("Add object");
+           console.log(add);
+           console.log("testdata data:");
+           console.log(testdata.data);
            testdata[i].data.push(add);
            console.log("data added, testdata content");
            console.log(testdata);
@@ -98,13 +108,11 @@ class MQTTtest extends Component{
     const sensor_name = sensor_name_topic.substring(sensor_name_topic.lastIndexOf('/') + 1);
     console.log(sensor_name);
 
-
-
     return(
-      <div className="PlotGraph"> 
+      <div className="PlotGraph">
         <Plotgraph temperature={graph} name={sensor_name}/>
       </div>
-      
+
     );
 
   }
@@ -116,9 +124,9 @@ class MQTTtest extends Component{
     const allGraphs = [];
     for (let index = 0; index < this.state.chartData.length; index++) {
         allGraphs.push(this.renderGraphs(index));
-  
+
     }
-    {/*<Plotgraph temperature={this.state.chartData}/>*/} 
+    {/*<Plotgraph temperature={this.state.chartData}/>*/}
     return(
       <div>{allGraphs}</div>
     );

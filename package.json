@@ -8,6 +8,7 @@
     "react-dom": "^16.8.6",
     "react-google-charts": "^3.0.14",
     "react-scripts": "3.0.1",
+    "recharts": "^1.8.2",
     "yarn": "^1.19.0"
   },
   "scripts": {
