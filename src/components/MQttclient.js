@@ -89,6 +89,7 @@ class MQTTtest extends Component{
            for (var u = 0; u < object["time"].length; u++) {
              const add = {time:object["time"][u],value:object["temp"][u]};
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
@@ -97,6 +98,9 @@ class MQTTtest extends Component{
              // fffhh
 >>>>>>> testi4
 >>>>>>> #
+=======
+             // fffhh
+>>>>>>> te#
              console.log("Add  json value");
              console.log(add);
              testdata[i].data.push(add);
