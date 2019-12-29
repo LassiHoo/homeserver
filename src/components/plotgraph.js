@@ -29,6 +29,7 @@ componentDidMount(){
     console.log(this.props.temperature)
     return (
       <div>
+      <h2>{this.props.name}</h2>
       <LineChart width={500} height={300} data={this.props.temperature}
       key={Math.random()}>
     <XAxis dataKey="time" tick={{fontSize: 15}}/>
