@@ -88,8 +88,7 @@ class MQTTtest extends Component{
            var object = JSON.parse(str);
            for (var u = 0; u < object["time"].length; u++) {
              const add = {time:object["time"][u],value:object["temp"][u]};
-             //testing git
-             console.log("Add json value");
+             console.log("Add   json value");
              console.log(add);
              testdata[i].data.push(add);
            }
